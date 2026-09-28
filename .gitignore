@@ -1,0 +1,77 @@
+# =============================================================================
+# AI Portal Automation Platform — .gitignore
+# =============================================================================
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+.Python
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.nox/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+*.py,cover
+htmlcov/
+.hypothesis/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.pyo
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.virtualenv/
+
+# --- Secrets and environment files (NEVER commit these) ---
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+*.secret
+secrets/
+
+# --- Alembic ---
+# Keep alembic.ini and env.py tracked; ignore generated migration files if needed
+# (We track migrations by default — comment out if you want to ignore them)
+
+# --- Frontend / Node ---
+node_modules/
+frontend/dist/
+frontend/build/
+.npm/
+.yarn/
+*.tsbuildinfo
+
+# --- IDE and editor files ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# --- Logs ---
+*.log
+logs/
+
+# --- OS ---
+.DS_Store
+desktop.ini

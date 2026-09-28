@@ -1,0 +1,21 @@
+# =============================================================================
+# AI Portal Automation Platform — Development/test dependencies
+#
+# Install with: pip install -r requirements-dev.txt
+# (Assumes requirements.txt has already been installed)
+# =============================================================================
+
+-r requirements.txt
+
+# --- Testing ---
+pytest==8.3.3
+pytest-asyncio==0.24.0
+anyio==4.6.0             # async test runner backend
+
+# --- Code quality ---
+ruff==0.6.9
+black==24.10.0
+mypy==1.11.2
+
+# --- Type stubs ---
+types-python-dateutil==2.9.0.20241003
