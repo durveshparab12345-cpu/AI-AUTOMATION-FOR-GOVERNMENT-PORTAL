@@ -26,14 +26,10 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 from app.core.config import settings
 
 # ---------------------------------------------------------------------------
-# Import Base — which will also import all models that register with it.
-# Add future model imports here as new models are created in later stages:
-#
-#   from app.models import company, user, portal, workflow, ...
-#
-# Importing Base alone is sufficient for Stage 1 (no tables yet).
+# Import Base and ALL models so that Alembic autogenerate sees every table.
 # ---------------------------------------------------------------------------
 from app.db.base import Base
+import app.models  # noqa: F401 — registers all ORM models with Base.metadata
 
 # Alembic Config object — gives access to values in alembic.ini.
 config = context.config

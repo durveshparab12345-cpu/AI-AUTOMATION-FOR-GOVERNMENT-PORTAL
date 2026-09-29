@@ -1,7 +1,20 @@
-# models: SQLAlchemy ORM models — populated in future stages.
-#
-# Planned models (Stage 2+):
-#   Company, User, Portal, Workflow, WorkflowVersion,
-#   CompanyRule, FieldMapping, Document,
-#   Execution, ExecutionStep, Exception,
-#   Approval, AuditLog
+# models package — import all models here so Alembic autogenerate sees them.
+from app.models.demo_case import DemoCase
+from app.models.execution import (
+    AutomationExecution,
+    AutomationExecutionStep,
+    ExecutionStatus,
+    StepStatus,
+)
+from app.models.organization import Organization
+from app.models.user import User
+
+__all__ = [
+    "Organization",
+    "User",
+    "DemoCase",
+    "AutomationExecution",
+    "AutomationExecutionStep",
+    "ExecutionStatus",
+    "StepStatus",
+]

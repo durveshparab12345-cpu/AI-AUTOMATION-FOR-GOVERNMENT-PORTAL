@@ -1,6 +1,5 @@
 # =============================================================================
 # AI Portal Automation Platform — Production dependencies
-#
 # Pin versions for reproducible builds.
 # Run: pip install -r requirements.txt
 # =============================================================================
@@ -15,10 +14,19 @@ pydantic-settings==2.5.2
 
 # --- Database ---
 sqlalchemy==2.0.35
-asyncpg==0.29.0          # async PostgreSQL driver used by SQLAlchemy
+asyncpg==0.29.0
 alembic==1.13.3
 
-# --- HTTP client (used by tests and future service calls) ---
+# --- Auth ---
+python-jose[cryptography]==3.3.0
+passlib[bcrypt]==1.7.4
+python-multipart==0.0.12
+
+# --- Browser automation (Stage 2A prototype) ---
+playwright==1.47.0
+aiofiles==24.1.0
+
+# --- HTTP client ---
 httpx==0.27.2
 
 # --- Environment ---
