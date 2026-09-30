@@ -1,0 +1,68 @@
+services:
+  # PostgreSQL Database Service
+  - type: pserv
+    name: ai-portal-db
+    plan: free
+    ipAllowList: []
+    postgresSQLVersion: "15"
+
+  # Backend Service (FastAPI)
+  - type: web
+    name: ai-portal-backend
+    plan: free
+    runtime: python310
+    buildCommand: |
+      cd backend && \
+      pip install -r requirements.txt --trusted-host pypi.org --trusted-host files.pythonhosted.org && \
+      python -m alembic upgrade head
+    startCommand: cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_NAME
+        value: "AI Portal Automation Platform"
+      - key: APP_ENV
+        value: "production"
+      - key: DEBUG
+        value: "false"
+      - key: SECRET_KEY
+        fromService:
+          type: pserv
+          name: ai-portal-db
+          property: secretKey
+      - key: DATABASE_URL
+        fromService:
+          type: pserv
+          name: ai-portal-db
+          property: connectionString
+      - key: REDIS_URL
+        value: "redis://localhost:6379/0"
+      - key: CORS_ORIGINS
+        value: "https://${RENDER_EXTERNAL_HOSTNAME}"
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "1440"
+      - key: DEMO_MODE
+        value: "false"
+    routes:
+      - path: /api
+        destination: /api
+    healthCheckPath: /api/v1/health
+    healthCheckInterval: 30
+
+  # Frontend Service (React/Vite)
+  - type: web
+    name: ai-portal-frontend
+    plan: free
+    runtime: node
+    buildCommand: |
+      cd frontend && \
+      npm install && \
+      npm run build
+    startCommand: cd frontend && npm run preview -- --host 0.0.0.0
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: "https://ai-portal-backend.onrender.com/api/v1"
+      - key: VITE_APP_NAME
+        value: "AI Portal Automation"
+    routes:
+      - path: /
+        destination: /
+    staticPublishPath: dist
