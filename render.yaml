@@ -1,11 +1,9 @@
 services:
-  # PostgreSQL Database Service
   - type: pserv
     name: ai-portal-db
     plan: free
     postgresVersion: "15"
 
-  # Backend Service (FastAPI)
   - type: web
     name: ai-portal-backend
     plan: free
@@ -13,14 +11,12 @@ services:
     buildCommand: cd backend && pip install -r requirements.txt --trusted-host pypi.org --trusted-host files.pythonhosted.org && python -m alembic upgrade head
     startCommand: cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
-      - key: APP_NAME
-        value: "AI Portal Automation Platform"
       - key: APP_ENV
-        value: "production"
+        value: production
       - key: DEBUG
         value: "false"
       - key: SECRET_KEY
-        value: "your-secret-key-change-this"
+        value: "change-me-in-production"
       - key: DATABASE_URL
         fromService:
           type: pserv
@@ -28,21 +24,14 @@ services:
           property: connectionString
       - key: CORS_ORIGINS
         value: "https://ai-portal-frontend.onrender.com"
-      - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: "1440"
-      - key: DEMO_MODE
-        value: "false"
 
-  # Frontend Service (React/Vite)
   - type: web
     name: ai-portal-frontend
     plan: free
     runtime: node
     buildCommand: cd frontend && npm install && npm run build
     startCommand: cd frontend && npm run preview -- --host 0.0.0.0
-    staticPublishPath: dist
+    staticPublishPath: frontend/dist
     envVars:
       - key: VITE_API_BASE_URL
         value: "https://ai-portal-backend.onrender.com/api/v1"
-      - key: VITE_APP_NAME
-        value: "AI Portal Automation"
