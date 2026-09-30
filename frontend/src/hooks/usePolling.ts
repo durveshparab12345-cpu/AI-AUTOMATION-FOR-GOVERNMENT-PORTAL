@@ -1,17 +1,37 @@
-// usePolling — repeatedly calls a callback at an interval until stopped.
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
+/**
+ * Hook for polling an async function at regular intervals
+ */
 export function usePolling(
-  callback: () => void,
-  intervalMs: number,
-  active: boolean
+  callback: () => Promise<void>,
+  interval: number,
+  enabled: boolean = true
 ): void {
-  const callbackRef = useRef(callback);
-  callbackRef.current = callback;
+  const intervalIdRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
-    if (!active) return;
-    const id = setInterval(() => callbackRef.current(), intervalMs);
-    return () => clearInterval(id);
-  }, [active, intervalMs]);
+    if (!enabled) {
+      if (intervalIdRef.current) {
+        clearInterval(intervalIdRef.current);
+        intervalIdRef.current = null;
+      }
+      return;
+    }
+
+    // Call immediately on enable
+    callback();
+
+    // Then set up recurring interval
+    intervalIdRef.current = setInterval(() => {
+      callback();
+    }, interval);
+
+    return () => {
+      if (intervalIdRef.current) {
+        clearInterval(intervalIdRef.current);
+        intervalIdRef.current = null;
+      }
+    };
+  }, [callback, interval, enabled]);
 }

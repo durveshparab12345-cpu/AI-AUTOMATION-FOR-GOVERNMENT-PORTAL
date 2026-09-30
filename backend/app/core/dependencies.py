@@ -11,11 +11,18 @@ import uuid
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError
+from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.security import decode_access_token
+from app.core.security import verify_token
+from app.db.session import AsyncSessionLocal
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/token")
+
+
+async def get_db() -> AsyncSession:
+    """Get database session dependency."""
+    async with AsyncSessionLocal() as session:
+        yield session
 
 
 async def get_current_user_payload(
@@ -27,13 +34,10 @@ async def get_current_user_payload(
         detail="Could not validate credentials",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    try:
-        payload = decode_access_token(token)
-        if not payload.get("sub"):
-            raise credentials_exc
-        return payload
-    except JWTError as exc:
-        raise credentials_exc from exc
+    payload = verify_token(token)
+    if not payload or not payload.get("sub"):
+        raise credentials_exc
+    return payload
 
 
 async def get_current_org_id(
@@ -54,3 +58,24 @@ async def get_current_user_email(
 ) -> str:
     """Return the authenticated user's email from the JWT payload."""
     return payload["sub"]
+
+
+async def get_current_user(
+    email: str = Depends(get_current_user_email),
+    db: AsyncSession = Depends(get_db),
+) -> "User":
+    """Get the current authenticated user from the database."""
+    from app.models.user import User
+    from sqlalchemy.future import select
+
+    stmt = select(User).where(User.email == email)
+    result = await db.execute(stmt)
+    user = result.scalar_one_or_none()
+
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not found",
+        )
+
+    return user

@@ -162,7 +162,7 @@ def upgrade() -> None:
         sa.Column("initiated_by", sa.String(255), nullable=False),
         sa.Column(
             "status",
-            sa.Enum(
+            postgresql.ENUM(
                 "PENDING", "RUNNING", "WAITING_FOR_HUMAN", "VALIDATING",
                 "COMPLETED", "FAILED", "CANCELLED",
                 name="execution_status_enum",
@@ -208,7 +208,7 @@ def upgrade() -> None:
         sa.Column("step_name", sa.String(255), nullable=False),
         sa.Column(
             "status",
-            sa.Enum(
+            postgresql.ENUM(
                 "PENDING", "RUNNING", "WAITING_FOR_HUMAN", "SUCCESS", "FAILED", "SKIPPED",
                 name="step_status_enum",
                 create_type=False,

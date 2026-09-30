@@ -37,11 +37,11 @@ async def login(
 
     token = create_access_token(
         subject=user.email,
-        extra={"organization_id": str(user.organization_id), "user_id": str(user.id)},
+        extra={"tenant_id": str(user.tenant_id), "user_id": str(user.id)},
     )
     return TokenResponse(
         access_token=token,
-        organization_id=user.organization_id,
+        organization_id=user.tenant_id,
         user_email=user.email,
         user_name=user.full_name,
     )

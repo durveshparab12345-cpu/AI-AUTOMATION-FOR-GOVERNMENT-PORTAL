@@ -18,7 +18,7 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
-from sqlalchemy.ext.asyncio import async_engine_from_config
+from sqlalchemy.ext.asyncio import create_async_engine
 
 # ---------------------------------------------------------------------------
 # Load application configuration so DATABASE_URL is resolved from env vars.
@@ -34,9 +34,8 @@ import app.models  # noqa: F401 — registers all ORM models with Base.metadata
 # Alembic Config object — gives access to values in alembic.ini.
 config = context.config
 
-# Override the sqlalchemy.url from alembic.ini with the application setting.
-# This ensures a single source of truth for the database connection string.
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# NOTE: We don't use config.set_main_option() because it tries to parse special
+# characters in passwords. Instead, we pass the URL directly to Alembic's context.
 
 # Interpret the config file for Python logging if present.
 if config.config_file_name is not None:
@@ -53,9 +52,8 @@ def run_migrations_offline() -> None:
     Generates SQL scripts without requiring a live database connection.
     Useful for reviewing migrations before applying them.
     """
-    url = config.get_main_option("sqlalchemy.url")
     context.configure(
-        url=url,
+        url=settings.DATABASE_URL,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
@@ -78,9 +76,8 @@ async def run_async_migrations() -> None:
     asyncpg requires an async engine; this function creates a disposable
     engine purely for the migration run and disposes it immediately after.
     """
-    connectable = async_engine_from_config(
-        config.get_section(config.config_ini_section, {}),
-        prefix="sqlalchemy.",
+    connectable = create_async_engine(
+        settings.DATABASE_URL,
         poolclass=pool.NullPool,
     )
 
@@ -99,3 +96,11 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+
+
+
+if context.is_offline_mode():
+    run_migrations_offline()
+else:
+    run_migrations_online()
+

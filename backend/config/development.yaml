@@ -1,0 +1,85 @@
+# Development environment configuration
+# This configuration is for local development and testing
+
+app:
+  name: "AI Portal Automation Platform"
+  version: "1.0.0"
+  environment: "development"
+  debug: true
+  log_level: "DEBUG"
+
+api:
+  host: "127.0.0.1"
+  port: 8000
+  reload: true
+  workers: 1
+
+database:
+  engine: "postgresql"
+  host: "localhost"
+  port: 5432
+  name: "ai_portal_dev"
+  user: "postgres"
+  password: "postgres"
+  pool_size: 5
+  max_overflow: 10
+  echo: false  # Set to true for SQL query logging
+
+redis:
+  host: "localhost"
+  port: 6379
+  db: 0
+  password: null
+
+jwt:
+  secret_key: "your-development-secret-key-change-in-production"
+  algorithm: "HS256"
+  access_token_expire_minutes: 30
+  refresh_token_expire_days: 7
+
+cors:
+  allowed_origins:
+    - "http://localhost:3000"
+    - "http://localhost:3001"
+    - "http://127.0.0.1:3000"
+  allow_credentials: true
+  allow_methods: ["*"]
+  allow_headers: ["*"]
+
+email:
+  smtp_server: "localhost"
+  smtp_port: 1025
+  from_email: "noreply@aiportal.local"
+  use_tls: false
+
+storage:
+  type: "local"
+  path: "/tmp/ai_portal_storage"
+
+logging:
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/development.log"
+  max_size_mb: 10
+  backup_count: 5
+
+ai_providers:
+  openai:
+    api_key: "sk-dev-your-api-key-here"
+    model: "gpt-4"
+    timeout: 30
+    enabled: false
+  anthropic:
+    api_key: "your-api-key-here"
+    model: "claude-3-opus"
+    timeout: 30
+    enabled: false
+
+features:
+  enable_audit_logging: true
+  enable_rate_limiting: false
+  enable_multi_tenancy: true
+  enable_workflow_engine: true
+  enable_browser_automation: true
+  enable_document_ocr: false
+
+# TODO: Add more environment-specific configurations

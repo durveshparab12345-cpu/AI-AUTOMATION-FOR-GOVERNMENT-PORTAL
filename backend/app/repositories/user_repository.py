@@ -36,12 +36,19 @@ class UserRepository:
         org = Organization(id=uuid.uuid4(), name=org_name, slug=org_slug)
         self._db.add(org)
         await self._db.flush()
+        
+        # Split full_name into first_name and last_name
+        name_parts = full_name.split(" ", 1)
+        first_name = name_parts[0]
+        last_name = name_parts[1] if len(name_parts) > 1 else None
+        
         user = User(
             id=uuid.uuid4(),
-            organization_id=org.id,
+            tenant_id=org.id,
             email=email,
             hashed_password=hashed_password,
-            full_name=full_name,
+            first_name=first_name,
+            last_name=last_name,
             is_active=True,
             is_admin=True,
         )

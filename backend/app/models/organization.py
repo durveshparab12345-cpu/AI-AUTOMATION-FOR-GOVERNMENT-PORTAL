@@ -32,7 +32,14 @@ class Organization(Base):
     )
 
     # Relationships (populated in later stages as models are added)
-    users: Mapped[list[User]] = relationship("User", back_populates="organization")  # noqa: F821
+    # Note: User inherits from BaseModel which has tenant_id FK pointing here
+    users: Mapped[list[User]] = relationship("User", foreign_keys="User.tenant_id", back_populates=None)  # noqa: F821
+    roles: Mapped[list[Role]] = relationship("Role", cascade="all, delete-orphan")  # noqa: F821
+    audit_logs: Mapped[list[AuditLog]] = relationship("AuditLog", back_populates="organization", cascade="all, delete-orphan")  # noqa: F821
+    cases: Mapped[list[Case]] = relationship("Case", cascade="all, delete-orphan")  # noqa: F821
+    beneficiaries: Mapped[list[Beneficiary]] = relationship(  # noqa: F821
+        "Beneficiary", cascade="all, delete-orphan"
+    )
     demo_cases: Mapped[list[DemoCase]] = relationship(  # noqa: F821
         "DemoCase", back_populates="organization"
     )

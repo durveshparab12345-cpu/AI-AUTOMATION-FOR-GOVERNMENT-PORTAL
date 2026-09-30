@@ -9,6 +9,12 @@ import type {
   ExecutionStep,
   TokenResponse,
   ValidationResult,
+  Portal,
+  Workflow,
+  Case,
+  User,
+  Organization,
+  PaginatedResponse,
 } from "../types";
 
 const BASE_URL = "/api/v1";
@@ -94,6 +100,130 @@ export async function login(
   }
 
   return response.json() as Promise<TokenResponse>;
+}
+
+// ---------------------------------------------------------------------------
+// Portals
+// ---------------------------------------------------------------------------
+export async function listPortals(): Promise<Portal[]> {
+  return apiFetch<Portal[]>("/portals");
+}
+
+export async function getPortal(id: string): Promise<Portal> {
+  return apiFetch<Portal>(`/portals/${id}`);
+}
+
+export async function createPortal(data: {
+  name: string;
+  description: string;
+  url: string;
+}): Promise<Portal> {
+  return apiFetch<Portal>("/portals", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updatePortal(
+  id: string,
+  data: Partial<Portal>
+): Promise<Portal> {
+  return apiFetch<Portal>(`/portals/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deletePortal(id: string): Promise<void> {
+  return apiFetch<void>(`/portals/${id}`, { method: "DELETE" });
+}
+
+// ---------------------------------------------------------------------------
+// Workflows
+// ---------------------------------------------------------------------------
+export async function listWorkflows(): Promise<Workflow[]> {
+  return apiFetch<Workflow[]>("/workflows");
+}
+
+export async function getWorkflow(id: string): Promise<Workflow> {
+  return apiFetch<Workflow>(`/workflows/${id}`);
+}
+
+export async function createWorkflow(data: {
+  name: string;
+  description: string;
+}): Promise<Workflow> {
+  return apiFetch<Workflow>("/workflows", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateWorkflow(
+  id: string,
+  data: Partial<Workflow>
+): Promise<Workflow> {
+  return apiFetch<Workflow>(`/workflows/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function publishWorkflow(id: string): Promise<Workflow> {
+  return apiFetch<Workflow>(`/workflows/${id}/publish`, { method: "POST", body: JSON.stringify({}) });
+}
+
+export async function deleteWorkflow(id: string): Promise<void> {
+  return apiFetch<void>(`/workflows/${id}`, { method: "DELETE" });
+}
+
+// ---------------------------------------------------------------------------
+// Cases
+// ---------------------------------------------------------------------------
+export async function listCases(
+  page = 1,
+  pageSize = 10
+): Promise<PaginatedResponse<Case>> {
+  return apiFetch<PaginatedResponse<Case>>(
+    `/cases?page=${page}&page_size=${pageSize}`
+  );
+}
+
+export async function getCase(id: string): Promise<Case> {
+  return apiFetch<Case>(`/cases/${id}`);
+}
+
+export async function createCase(data: {
+  beneficiary_id: string;
+  description: string;
+  estimated_amount: number;
+}): Promise<Case> {
+  return apiFetch<Case>("/cases", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateCase(id: string, data: Partial<Case>): Promise<Case> {
+  return apiFetch<Case>(`/cases/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteCase(id: string): Promise<void> {
+  return apiFetch<void>(`/cases/${id}`, { method: "DELETE" });
+}
+
+// ---------------------------------------------------------------------------
+// Users & Organization
+// ---------------------------------------------------------------------------
+export async function listUsers(): Promise<User[]> {
+  return apiFetch<User[]>("/users");
+}
+
+export async function getOrganization(id: string): Promise<Organization> {
+  return apiFetch<Organization>(`/organizations/${id}`);
 }
 
 // ---------------------------------------------------------------------------

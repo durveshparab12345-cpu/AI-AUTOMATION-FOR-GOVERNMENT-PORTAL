@@ -57,7 +57,13 @@ class AutomationExecution(Base):
         nullable=False,
         index=True,
     )
-    demo_case_id: Mapped[uuid.UUID] = mapped_column(
+    case_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("cases.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    demo_case_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("demo_cases.id", ondelete="SET NULL"),
         nullable=True,
@@ -96,6 +102,7 @@ class AutomationExecution(Base):
     organization: Mapped[Organization] = relationship(  # noqa: F821
         "Organization", back_populates="executions"
     )
+    case: Mapped[Case] = relationship("Case", back_populates="executions")  # noqa: F821
     demo_case: Mapped[DemoCase] = relationship("DemoCase")  # noqa: F821
     steps: Mapped[list[AutomationExecutionStep]] = relationship(
         "AutomationExecutionStep",

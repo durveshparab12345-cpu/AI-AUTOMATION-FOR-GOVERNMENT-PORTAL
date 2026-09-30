@@ -21,6 +21,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1 import auth as auth_router
 from app.api.v1 import health as health_router
 from app.api.v1 import pmjay_demo as pmjay_router
+from app.api.v1 import portals as portals_router
+from app.api.v1 import workflows as workflows_router
+from app.api.v1 import automations as automations_router
+from app.api.v1 import human_interventions as human_interventions_router
+from app.api.v1 import exceptions as exceptions_router
+from app.api.v1 import notifications as notifications_router
+from app.api.v1 import reports as reports_router
+from app.api.v1 import field_mappings as field_mappings_router
 from app.core.config import settings
 from app.core.logging import configure_logging
 
@@ -96,6 +104,14 @@ def create_app() -> FastAPI:
     application.include_router(health_router.router, prefix="/api/v1")
     application.include_router(auth_router.router, prefix="/api/v1")
     application.include_router(pmjay_router.router, prefix="/api/v1")
+    application.include_router(portals_router.router, prefix="/api/v1")
+    application.include_router(workflows_router.router, prefix="/api/v1")
+    application.include_router(automations_router.router, prefix="/api/v1")
+    application.include_router(human_interventions_router.router, prefix="/api/v1")
+    application.include_router(exceptions_router.router, prefix="/api/v1")
+    application.include_router(notifications_router.router, prefix="/api/v1")
+    application.include_router(reports_router.router, prefix="/api/v1")
+    application.include_router(field_mappings_router.router, prefix="/api/v1")
 
     return application
 
