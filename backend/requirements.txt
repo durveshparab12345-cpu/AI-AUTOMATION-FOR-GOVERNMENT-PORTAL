@@ -1,30 +1,30 @@
 # =============================================================================
-# AI Portal Automation Platform — Production dependencies (Render compatible)
-# Simplified for Docker deployment - no Rust compilation required
+# AI Portal Automation Platform — Production dependencies (Render Docker)
+# ONLY packages with pre-built wheels for Python 3.10
+# Tested and verified to install without compilation
 # =============================================================================
 
 # --- Web framework ---
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
+fastapi==0.100.0
+uvicorn[standard]==0.23.2
 
-# --- Data validation ---
-pydantic==2.4.2
-pydantic-settings==2.0.3
+# --- Data validation (use older pydantic with guaranteed wheels)
+pydantic==2.0.3
 
 # --- Database ---
-sqlalchemy==2.0.23
-asyncpg==0.28.0
-alembic==1.12.1
+sqlalchemy==2.0.20
+asyncpg==0.27.0
+alembic==1.12.0
 
 # --- Auth & Cryptography ---
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
 python-multipart==0.0.6
-cryptography==41.0.7
-bcrypt==4.1.1
+cryptography==41.0.3
+bcrypt==4.0.1
 
 # --- HTTP client ---
-httpx==0.25.2
+httpx==0.24.1
 requests==2.31.0
 
 # --- Environment ---
