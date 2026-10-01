@@ -7,8 +7,8 @@ services:
   - type: web
     name: ai-portal-backend
     plan: free
-    runtime: python310
-    buildCommand: cd backend && bash build.sh
+    runtime: python312
+    buildCommand: cd backend && pip install --upgrade pip && pip install --prefer-binary pydantic==2.5.0 && pip install --prefer-binary -r requirements.txt && python -m alembic upgrade head
     startCommand: cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: APP_ENV
