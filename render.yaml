@@ -8,7 +8,7 @@ services:
     name: ai-portal-backend
     plan: free
     runtime: python310
-    buildCommand: cd backend && pip install --upgrade pip setuptools wheel && pip install --only-binary :all: -r requirements.txt && python -m alembic upgrade head
+    buildCommand: cd backend && bash build.sh
     startCommand: cd backend && python -m uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: APP_ENV
